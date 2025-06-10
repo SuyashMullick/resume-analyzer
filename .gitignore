@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+env/
+venv/
+*.env
+
+# Data
+data/
+*.pdf
+*.csv
+*.parquet
+
+# LLM/Weights
+*.bin
+*.gguf
+*.pth
+*.h5
+
+# IDE
+.vscode/
+.idea/
+
+# System
+.DS_Store
+Thumbs.db
+
+# Ollama
+.ollama/
+
+# Hugging Face cache
+.cache/
