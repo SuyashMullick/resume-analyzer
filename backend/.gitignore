@@ -1,0 +1,19 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment folders (if you use venv or virtualenv)
+venv/
+.env/
+.envrc
+
+# VSCode settings folder
+.vscode/
+
+# Dependency directories (if you vendor or cache dependencies)
+pip-wheel-metadata/
+*.egg-info/
+
+# Logs
+*.log
