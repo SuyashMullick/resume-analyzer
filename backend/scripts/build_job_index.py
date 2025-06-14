@@ -8,7 +8,7 @@ from ..app.embeddings import embed_text
 
 
 # Load dataset
-df = pd.read_csv("backend/data/jobs.csv")
+df = pd.read_csv("backend/data/jobs.csv").head(50000)
 df = df.fillna("")
 
 # Combine relevant fields

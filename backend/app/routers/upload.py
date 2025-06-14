@@ -1,6 +1,6 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
-from app.resume_parser import extract_text_from_pdf
-from app.embeddings import embed_text
+from ..resume_parser import extract_text_from_pdf
+from ..embeddings import embed_text
 
 router = APIRouter()
 
