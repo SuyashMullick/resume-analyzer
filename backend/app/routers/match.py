@@ -1,24 +1,18 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import UploadFile, File, APIRouter
 from fastapi.responses import JSONResponse
-import os
-import requests
 import numpy as np
 from dotenv import load_dotenv
+from ..hf_model import query_hf_model
 
-# Load .env
 load_dotenv()
 
-HF_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
-HF_MODEL = "mistralai/Mistral-7B-Instruct-v0.2"
-
-app = FastAPI()
+router = APIRouter()
 
 # Dummy job metadata
 metadata = [
     {"title": "Software Engineer", "company": "Acme Inc"},
     {"title": "Data Scientist", "company": "Beta AI"},
     {"title": "ML Engineer", "company": "Gamma Tech"},
-    # More jobs...
 ]
 
 def search_jobs_vector(resume_content):
@@ -26,27 +20,7 @@ def search_jobs_vector(resume_content):
     distances = np.array([[5.0, 10.0, 20.0]])
     return indices, distances
 
-def query_mistral(prompt: str):
-    url = f"https://api-inference.huggingface.co/models/{HF_MODEL}"
-    headers = {
-        "Authorization": f"Bearer {HF_TOKEN}",
-        "Content-Type": "application/json"
-    }
-    payload = {
-        "inputs": prompt,
-        "parameters": {
-            "temperature": 0.2,
-            "max_new_tokens": 300
-        }
-    }
-    response = requests.post(url, headers=headers, json=payload)
-    if response.status_code != 200:
-        raise Exception(f"Hugging Face API error: {response.status_code} - {response.text}")
-    # The API returns a list of dicts with 'generated_text'
-    result = response.json()
-    return result[0]["generated_text"]
-
-@app.post("/match")
+@router.post("/match")
 async def match_resume(resume: UploadFile = File(...)):
     content = await resume.read()
     
@@ -69,7 +43,8 @@ async def match_resume(resume: UploadFile = File(...)):
     )
 
     try:
-        mistral_reply = query_mistral(prompt)
+        mistral_reply = query_hf_model("Tell me a fun fact about sweden.")
+        # mistral_reply = query_hf_model(prompt)
     except Exception as e:
         mistral_reply = f"Error: {str(e)}"
 
