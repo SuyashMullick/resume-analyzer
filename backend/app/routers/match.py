@@ -31,8 +31,7 @@ async def match_resume(resume: UploadFile = File(...)):
     )
 
     try:
-        hf_model_reply = query_hf_model("Tell me a fun fact about sweden.")
-        # hf_model_reply = query_hf_model(prompt)
+        hf_model_reply = query_hf_model(prompt)
     except Exception as e:
         hf_model_reply = f"Error: {str(e)}"
 

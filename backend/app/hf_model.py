@@ -17,10 +17,10 @@ def query_hf_model(prompt: str):
         "Content-Type": "application/json"
     }
     
-    formatted_prompt = f"<s>[INST] {prompt.strip()} [/INST]"
+    # formatted_prompt = f"<s>[INST] {prompt.strip()} [/INST]"
     
     payload = {
-        "inputs": formatted_prompt,
+        "inputs": prompt,
         "parameters": {
             "temperature": 0.2,
             "max_new_tokens": 300
