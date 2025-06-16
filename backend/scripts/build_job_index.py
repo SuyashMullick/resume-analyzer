@@ -8,7 +8,7 @@ from ..app.embeddings import embed_text
 
 
 # Load dataset
-df = pd.read_csv("backend/data/jobs.csv").head(50000)
+df = pd.read_csv("backend/data/jobs.csv").head(1000)
 df = df.fillna("")
 
 # Combine relevant fields
@@ -45,7 +45,7 @@ faiss.write_index(index, "backend/data/faiss_jobs.index")
 
 # Save job metadata
 metadata = df[[
-    "Job Id", "Job Title", "Company", "location", "Work Type", "Salary Range", "Job Posting Date"
+    "Job Id", "Job Title", "Company", "location", "Country", "Work Type", "Salary Range", "Job Posting Date", "Role", "Job Description", "Responsibilities", "Qualifications", "skills", "Benefits", "Company Profile"
 ]].to_dict(orient="records")
 
 with open("backend/data/job_metadata.pkl", "wb") as f:

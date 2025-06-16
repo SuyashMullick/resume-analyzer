@@ -1,6 +1,5 @@
 from fastapi import UploadFile, File, APIRouter
 from fastapi.responses import JSONResponse
-import numpy as np
 from dotenv import load_dotenv
 from ..resume_parser import extract_text_from_pdf
 from ..job_matcher import match_jobs
@@ -20,14 +19,26 @@ async def match_resume(resume: UploadFile = File(...)):
 
     results = match_jobs(resume_text)
 
-    matches_summary = "\n".join(
-        [f"- {job['title']} at {job['company']} in {job['location']} (Score: {round(job['match_score'], 2)})" for job in results]
-    )
+    matches_summary = "\n".join([
+        (
+            f"- {job['Job Title']} at {job['Company']} in {job['location']}, {job['Country']} "
+            f"(Score: {round(job['match_score'], 2)})\n"
+            f"  Work Type: {job['Work Type']}, Salary: {job['Salary Range']}, Role: {job['Role']}\n"
+            f"  Skills: {job['skills']}\n"
+            f"  Qualifications: {job['Qualifications']}\n"
+            f"  Responsibilities: {job['Responsibilities'][:200]}..."
+        )
+        for job in results
+    ])
+
     prompt = (
-        f"I have a resume that matched the following jobs:\n{matches_summary}\n\n"
-        f"Please provide a short analysis:\n"
-        f"1. Why do these jobs match the resume?\n"
-        f"2. What are 2-3 suggestions to improve the resume for these roles?\n"
+        f"You are an expert career coach and ATS (applicant tracking system) specialist.\n"
+        f"Below is a candidate's resume:\n{resume_text}\n\n"
+        f"The resume matched these jobs (including job titles, companies, locations, and key responsibilities/qualifications):\n{matches_summary}\n\n"
+        f"Please provide a professional analysis:\n"
+        f"1️⃣ Explain *why* this resume is a good match for these jobs, referring to specific parts of the resume and jobs.\n"
+        f"2️⃣ Give 2-3 *specific* suggestions to improve the resume for these roles, focusing on content, structure, or keywords.\n"  
+        f"Keep your tone clear and actionable.\n*END_OF_PROMPT*"
     )
 
     try:
